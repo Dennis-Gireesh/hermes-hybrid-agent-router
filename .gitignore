@@ -1,0 +1,36 @@
+.DS_Store
+
+# Secrets and auth
+.env
+*.env
+auth.json
+auth.lock
+google_token.json
+google_client_secret.json
+*token*
+*secret*
+*.pem
+*.key
+
+# Runtime state
+logs/
+sessions/
+state.db
+state.db-*
+*.db
+*.sqlite
+*.sqlite3
+*.lock
+*.pid
+
+# Raw local Hermes snapshots/backups may contain personal config or memory.
+production-backups/
+production-baselines/
+
+# Dependency/build noise
+node_modules/
+__pycache__/
+.venv/
+venv/
+dist/
+build/

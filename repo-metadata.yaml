@@ -1,0 +1,60 @@
+# Machine-readable public repository metadata for humans, agents, and release automation.
+name: hermes-hybrid-agent-router
+title: Hermes Hybrid Agent Router
+description: >-
+  Hermes Agent setup that routes tasks between local Ollama/llama.cpp models and
+  OpenAI Codex authority models to reduce cost, preserve privacy, and keep
+  high-risk work verified.
+short_hook: >-
+  Stop paying premium-model prices for every draft. Route cheap work to local
+  LLMs and reserve Codex-level intelligence for consequential decisions.
+primary_audience:
+  - developers building local-first AI agent workflows
+  - Hermes Agent users configuring profiles and model routing
+  - builders combining local LLMs with OpenAI Codex
+  - AI workflow operators optimizing hosted-model cost
+topics:
+  - hermes-agent
+  - ollama
+  - llama-cpp
+  - openai-codex
+  - codex
+  - local-llm
+  - ai-agents
+  - multi-agent
+  - agentic-workflow
+  - llm-router
+  - moa
+  - mixture-of-agents
+  - cost-optimization
+  - agent-seo
+  - llms-txt
+  - automation
+target_queries:
+  - Hermes Agent local LLM setup
+  - Hermes Agent Ollama llama.cpp workflow
+  - OpenAI Codex local models
+  - local LLM router for AI agents
+  - hybrid AI agent architecture
+  - cost saving AI agent workflow
+  - MOA mixture of agents setup
+  - agent SEO llms.txt example
+  - local-first agentic coding workflow
+  - multi-agent Hermes profile setup
+canonical_entrypoints:
+  human:
+    - README.md
+    - docs/SIMPLE_WORKFLOW.md
+    - docs/ARCHITECTURE.md
+    - docs/REPLICATION_GUIDE.md
+  agent:
+    - llms.txt
+    - .github/copilot-instructions.md
+    - repo-metadata.yaml
+  config:
+    - config-snapshots/production-routing-20260627.yaml
+safety_rules:
+  - do not publish secrets, auth files, tokens, sessions, logs, state databases, raw backups, or personal memories
+  - use sanitized routing snapshots instead of live Hermes config
+  - do not silently fall back from authority models to weaker local models for production-sensitive work
+  - keep worker gateways stopped unless each has a separate bot token or channel

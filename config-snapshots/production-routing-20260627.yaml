@@ -1,0 +1,66 @@
+# Sanitized Hermes production routing snapshot.
+# Generated from the 2026-06-27 rollout notes; no secrets or auth material.
+
+version: 2026-06-27
+authority:
+  provider: openai-codex
+  model: gpt-5.5
+profiles:
+  default:
+    role: router-and-final-synthesis
+    model: openai-codex:gpt-5.5
+    gateway: running
+    moa_default: strategy
+  researcher:
+    role: evidence-and-market-research
+    model: openai-codex:gpt-5.5
+    gateway: stopped
+    moa_default: evidence-review
+  coder:
+    role: implementation-and-tests
+    model: openai-codex:gpt-5.5
+    gateway: stopped
+    moa_default: coding-review
+  media:
+    role: media-and-multimodal-workflows
+    model: openai-codex:gpt-5.5
+    gateway: stopped
+    moa_default: media-review
+  ops:
+    role: hermes-ops-automation-and-rollback
+    model: openai-codex:gpt-5.5
+    gateway: stopped
+    moa_default: ops-change-review
+providers:
+  llamacpp:
+    base_url: http://127.0.0.1:8080/v1
+    models:
+      - Ornith-1.0-35B
+    purpose: local-draft-reference-and-crosscheck
+  ollama:
+    base_url: http://127.0.0.1:11434/v1
+    models:
+      - gpt-oss:120b
+      - qwen3.6:35b-mlx
+    purpose: local-reference-and-experiment-lane
+moa:
+  policy: use-only-for-high-value-decisions
+  aggregator: openai-codex:gpt-5.5
+  presets:
+    strategy:
+      references:
+        - openai-codex:gpt-5.5
+        - ollama:gpt-oss:120b
+    coding-review:
+      references:
+        - openai-codex:gpt-5.5
+        - llamacpp:Ornith-1.0-35B
+    local-crosscheck:
+      references:
+        - llamacpp:Ornith-1.0-35B
+        - ollama:gpt-oss:120b
+guardrails:
+  - no-silent-fallback-from-authority-to-local-models
+  - keep-worker-gateways-stopped-without-dedicated-bot-tokens
+  - do-not-commit-env-auth-session-log-state-or-raw-backup-files
+  - canary-new-models-before-promoting-a-lane-owner

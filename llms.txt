@@ -1,0 +1,41 @@
+# Hermes Hybrid Agent Router
+
+## Summary
+
+This repository documents a Hermes Agent setup that routes work between local open source models and OpenAI Codex authority models. The purpose is to reduce hosted-model spend, preserve local/private workflows, and keep high-consequence tasks verified.
+
+Primary discoverability phrase: Hermes Hybrid Agent Router.
+
+Related search phrases: Hermes Agent local LLM setup, Ollama llama.cpp agent workflow, OpenAI Codex local models, local LLM router, hybrid AI agent architecture, MOA mixture of agents, cost-saving AI agents, agent SEO, llms.txt example.
+
+## Read First
+
+- `README.md` - public overview, hook, architecture diagram, cost-routing story.
+- `docs/SIMPLE_WORKFLOW.md` - beginner-friendly workflow chart and plain-English explanation.
+- `docs/ARCHITECTURE.md` - routing rules, profile roles, MOA policy, verification.
+- `docs/REPLICATION_GUIDE.md` - how to recreate the setup with your own models.
+- `docs/SEO.md` - target queries, topics, and discovery metadata.
+- `.github/copilot-instructions.md` - coding-agent instructions for this repository.
+- `repo-metadata.yaml` - machine-readable repo title, description, topics, target queries, entry points, and safety rules.
+- `config-snapshots/production-routing-20260627.yaml` - sanitized routing snapshot.
+
+## Core Concepts
+
+- Route by consequence, not model hype.
+- Use local models through Ollama and llama.cpp for drafts, summaries, brainstorms, and second opinions.
+- Use the authority model for code, config, tool use, money-facing output, and final decisions.
+- Use MOA only for high-value review where model disagreement is useful.
+- Do not silently fall back from the authority lane to a weaker local model.
+- Keep worker gateways stopped unless each worker has its own bot token or channel.
+
+## Current Example Lanes
+
+- Authority: `openai-codex:gpt-5.5`
+- llama.cpp: `llamacpp:Ornith-1.0-35B`
+- Ollama: `ollama:gpt-oss:120b`
+- Experimental: `ollama:qwen3.6:35b-mlx`
+- MOA aggregator: authority model
+
+## Safety
+
+Do not publish secrets, `.env` files, auth files, tokens, sessions, logs, state databases, raw backups, or personal memories. Prefer sanitized routing snapshots over live Hermes config.
