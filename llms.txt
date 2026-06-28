@@ -14,10 +14,10 @@ Related search phrases: Hermes Agent local LLM setup, Ollama llama.cpp agent wor
 - `docs/SIMPLE_WORKFLOW.md` - beginner-friendly workflow chart and plain-English explanation.
 - `docs/ARCHITECTURE.md` - routing rules, profile roles, MOA policy, verification.
 - `docs/REPLICATION_GUIDE.md` - how to recreate the setup with your own models.
-- `docs/SEO.md` - target queries, topics, and discovery metadata.
 - `.github/copilot-instructions.md` - coding-agent instructions for this repository.
-- `repo-metadata.yaml` - machine-readable repo title, description, topics, target queries, entry points, and safety rules.
-- `config-snapshots/production-routing-20260627.yaml` - sanitized routing snapshot.
+- `templates/hermes/config.yaml` - placeholder config for provider lanes, MOA, and routing policy.
+- `templates/hermes/profiles/` - profile SOUL templates for default, researcher, coder, media, and ops.
+- `scripts/bootstrap-hermes-hybrid.sh` - non-destructive staging script for template files.
 
 ## Core Concepts
 
@@ -28,14 +28,14 @@ Related search phrases: Hermes Agent local LLM setup, Ollama llama.cpp agent wor
 - Do not silently fall back from the authority lane to a weaker local model.
 - Keep worker gateways stopped unless each worker has its own bot token or channel.
 
-## Current Example Lanes
+## Template Lanes
 
-- Authority: `openai-codex:gpt-5.5`
-- llama.cpp: `llamacpp:Ornith-1.0-35B`
-- Ollama: `ollama:gpt-oss:120b`
-- Experimental: `ollama:qwen3.6:35b-mlx`
+- Authority: `YOUR_AUTHORITY_PROVIDER:YOUR_AUTHORITY_MODEL`
+- llama.cpp: `llamacpp:YOUR_LLAMACPP_MODEL`
+- Ollama: `ollama:YOUR_OLLAMA_MODEL`
+- Experimental: any candidate model that passes canaries
 - MOA aggregator: authority model
 
 ## Safety
 
-Do not publish secrets, `.env` files, auth files, tokens, sessions, logs, state databases, raw backups, or personal memories. Prefer sanitized routing snapshots over live Hermes config.
+Do not publish secrets, `.env` files, auth files, tokens, sessions, logs, state databases, raw backups, or personal memories. Prefer placeholders or sanitized examples over live Hermes config.

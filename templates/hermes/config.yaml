@@ -1,0 +1,94 @@
+# Hermes Hybrid Agent Router template.
+# Copy into your Hermes config only after replacing every YOUR_* placeholder.
+# Keep secrets in your Hermes .env or credential store, not in this file.
+
+model:
+  provider: YOUR_AUTHORITY_PROVIDER
+  default: YOUR_AUTHORITY_MODEL
+
+providers:
+  # Hosted authority lane.
+  # Examples:
+  #   provider: openai-codex
+  #   model: gpt-5.5
+  # Use the best model you can access for final decisions, code, config, and tool use.
+  YOUR_AUTHORITY_PROVIDER:
+    name: YOUR_AUTHORITY_DISPLAY_NAME
+    base_url: ""
+    default_model: YOUR_AUTHORITY_MODEL
+    models:
+      YOUR_AUTHORITY_MODEL:
+        context_length: 200000
+
+  # Local llama.cpp lane.
+  # Start with:
+  #   llama-server --host 127.0.0.1 --port 8080 --model /path/to/model.gguf
+  llamacpp:
+    name: Local llama.cpp
+    base_url: http://127.0.0.1:8080/v1
+    default_model: YOUR_LLAMACPP_MODEL
+    models:
+      YOUR_LLAMACPP_MODEL:
+        context_length: 65536
+
+  # Local Ollama lane.
+  # Start with:
+  #   ollama serve
+  #   ollama pull YOUR_OLLAMA_MODEL
+  ollama:
+    name: Local Ollama
+    base_url: http://127.0.0.1:11434/v1
+    default_model: YOUR_OLLAMA_MODEL
+    models:
+      YOUR_OLLAMA_MODEL:
+        context_length: 131072
+
+# Production-sensitive work should fail loudly instead of silently downgrading
+# from the authority lane to a weaker local model.
+fallback_providers: []
+
+moa:
+  enabled: true
+  default_preset: strategy
+  presets:
+    strategy:
+      description: Business, architecture, pricing, and high-value plans.
+      aggregator: YOUR_AUTHORITY_PROVIDER:YOUR_AUTHORITY_MODEL
+      references:
+        - YOUR_AUTHORITY_PROVIDER:YOUR_AUTHORITY_MODEL
+        - ollama:YOUR_OLLAMA_MODEL
+
+    coding-review:
+      description: Important code review before shipping.
+      aggregator: YOUR_AUTHORITY_PROVIDER:YOUR_AUTHORITY_MODEL
+      references:
+        - YOUR_AUTHORITY_PROVIDER:YOUR_AUTHORITY_MODEL
+        - llamacpp:YOUR_LLAMACPP_MODEL
+
+    local-crosscheck:
+      description: Local disagreement before authority synthesis.
+      aggregator: YOUR_AUTHORITY_PROVIDER:YOUR_AUTHORITY_MODEL
+      references:
+        - llamacpp:YOUR_LLAMACPP_MODEL
+        - ollama:YOUR_OLLAMA_MODEL
+
+hybrid_routing_policy:
+  rule: route-by-consequence
+  local_lanes:
+    - drafts
+    - summaries
+    - brainstorming
+    - classification
+    - second_opinions
+  authority_lane:
+    - final_decisions
+    - code_changes
+    - config_changes
+    - tool_use
+    - production_work
+    - client_or_money_facing_output
+  guardrails:
+    - no_silent_authority_fallback
+    - canary_before_promoting_new_models
+    - verify_before_shipping
+    - keep_secrets_out_of_git

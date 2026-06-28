@@ -2,6 +2,8 @@
 
 Use this guide to recreate the Hermes hybrid routing pattern with your own models and budget.
 
+This repo is a starter kit. It does not contain private Hermes state, secrets, raw backups, logs, sessions, memories, or account-specific config.
+
 ## 1. Choose Your Lanes
 
 Pick lane owners before editing config.
@@ -22,7 +24,7 @@ Ollama:
 
 ```sh
 ollama serve
-ollama pull gpt-oss:120b
+ollama pull YOUR_OLLAMA_MODEL
 ```
 
 llama.cpp:
@@ -41,7 +43,31 @@ curl -fsS http://127.0.0.1:11434/v1/models
 curl -fsS http://127.0.0.1:8080/v1/models
 ```
 
-## 3. Configure Hermes Providers
+## 3. Stage The Template
+
+Run the non-destructive bootstrap:
+
+```sh
+./scripts/bootstrap-hermes-hybrid.sh
+```
+
+This creates:
+
+```text
+build/hermes-template/
+  config.yaml
+  SOUL.md
+  NEXT_STEPS.md
+  profiles/
+    researcher/SOUL.md
+    coder/SOUL.md
+    media/SOUL.md
+    ops/SOUL.md
+```
+
+Review these files before copying anything into `~/.hermes`.
+
+## 4. Configure Hermes Providers
 
 Use named lanes. Avoid vague aliases when possible.
 
@@ -62,9 +88,9 @@ providers:
   ollama:
     name: Local Ollama
     base_url: http://127.0.0.1:11434/v1
-    default_model: gpt-oss:120b
+    default_model: YOUR_OLLAMA_MODEL
     models:
-      gpt-oss:120b:
+      YOUR_OLLAMA_MODEL:
         context_length: 131072
 
 fallback_providers: []
@@ -72,7 +98,9 @@ fallback_providers: []
 
 The important part is `fallback_providers: []`. Production-sensitive authority work should fail loudly when the authority lane is unavailable.
 
-## 4. Create Specialist Profiles
+The full placeholder template lives at [../templates/hermes/config.yaml](../templates/hermes/config.yaml).
+
+## 5. Create Specialist Profiles
 
 Recommended profile split:
 
@@ -92,7 +120,9 @@ Each profile should have:
 - Gateway stopped unless it has its own bot token or channel.
 - Verification rules for its job.
 
-## 5. Add MOA Presets
+Profile role templates live under [../templates/hermes/profiles/](../templates/hermes/profiles/).
+
+## 6. Add MOA Presets
 
 Use MOA only when disagreement is worth paying for.
 
@@ -104,7 +134,7 @@ Example presets:
 | `coding-review` | authority + llama.cpp | authority | Important code review |
 | `local-crosscheck` | llama.cpp + Ollama | authority | Local disagreement before final decision |
 
-## 6. Verify The Setup
+## 7. Verify The Setup
 
 Run:
 
@@ -129,10 +159,10 @@ Check local lanes directly:
 
 ```sh
 hermes -m llamacpp:your-local-model -z "Reply exactly HERMES_LLAMACPP_OK"
-hermes -m ollama:gpt-oss:120b -z "Reply exactly HERMES_OLLAMA_OK"
+hermes -m ollama:YOUR_OLLAMA_MODEL -z "Reply exactly HERMES_OLLAMA_OK"
 ```
 
-## 7. Add Rollback
+## 8. Add Rollback
 
 Before changing live Hermes config:
 
@@ -142,7 +172,7 @@ Before changing live Hermes config:
 4. Restart the affected gateway/dashboard only after config checks pass.
 5. Rerun canaries after restart.
 
-## 8. Measure Savings
+## 9. Measure Savings
 
 Track at least:
 
@@ -154,4 +184,3 @@ Track at least:
 - Time saved by profile specialization.
 
 Do not guess the savings. Measure your own workload and adjust the routing threshold.
-

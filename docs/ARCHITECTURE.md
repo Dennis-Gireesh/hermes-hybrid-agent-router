@@ -36,14 +36,16 @@ flowchart TD
 
 Editable diagram source: [hermes-hybrid-agent-architecture.excalidraw](hermes-hybrid-agent-architecture.excalidraw)
 
+Template config: [../templates/hermes/config.yaml](../templates/hermes/config.yaml)
+
 ## Model Lanes
 
 | Lane | Responsibility | Example |
 |---|---|---|
-| Authority | Final answer, config, code, tool routing, production judgment | `openai-codex:gpt-5.5` |
-| Local draft | Summaries, rough drafts, fast/private thinking | `llamacpp:Ornith-1.0-35B` |
-| Local reference | Wider second opinion and strategy contrast | `ollama:gpt-oss:120b` |
-| Experimental | Candidate model under canary review | `ollama:qwen3.6:35b-mlx` |
+| Authority | Final answer, config, code, tool routing, production judgment | `YOUR_AUTHORITY_PROVIDER:YOUR_AUTHORITY_MODEL` |
+| Local draft | Summaries, rough drafts, fast/private thinking | `llamacpp:YOUR_LLAMACPP_MODEL` |
+| Local reference | Wider second opinion and strategy contrast | `ollama:YOUR_OLLAMA_MODEL` |
+| Experimental | Candidate model under canary review | Any model that passes canaries |
 | MOA aggregator | Synthesizes references into one final judgment | Authority model |
 
 The key safety rule is that the authority lane should fail loudly when unavailable. It should not silently downgrade to a weaker local model for production-sensitive work.
@@ -132,4 +134,3 @@ This repo documents a working pattern, not a universal benchmark. A serious fork
 - MOA presets.
 - Rollback path.
 - Promotion benchmarks.
-

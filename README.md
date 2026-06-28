@@ -13,7 +13,7 @@ Also useful for people searching for:
 - OpenAI Codex with local models.
 - MOA or mixture-of-agents routing.
 - Cost-saving AI agent architecture.
-- Agent SEO and `llms.txt` examples.
+- Replicable Hermes profile templates.
 
 ## The Hook
 
@@ -69,17 +69,17 @@ flowchart TD
 
 Open the editable Excalidraw version at [docs/hermes-hybrid-agent-architecture.excalidraw](docs/hermes-hybrid-agent-architecture.excalidraw).
 
-## Current Reference Setup
+## Template Lane Setup
 
 | Lane | Example in this repo | Purpose |
 |---|---|---|
-| Authority | `openai-codex:gpt-5.5` | Final decisions, production code, config changes, tool routing, money-facing answers |
-| llama.cpp | `llamacpp:Ornith-1.0-35B` | Local drafts, second opinions, coding review reference |
-| Ollama | `ollama:gpt-oss:120b` | Heavier local reference work and strategy contrast |
-| Ollama vision/experiment | `ollama:qwen3.6:35b-mlx` | Available lane, promoted only after canaries |
-| MOA aggregator | `openai-codex:gpt-5.5` | Synthesizes high-value multi-model review |
+| Authority | `YOUR_AUTHORITY_PROVIDER:YOUR_AUTHORITY_MODEL` | Final decisions, production code, config changes, tool routing, money-facing answers |
+| llama.cpp | `llamacpp:YOUR_LLAMACPP_MODEL` | Local drafts, second opinions, coding review reference |
+| Ollama | `ollama:YOUR_OLLAMA_MODEL` | Heavier local reference work and strategy contrast |
+| Experimental | Any candidate model you canary first | Available lane, promoted only after canaries |
+| MOA aggregator | Authority model | Synthesizes high-value multi-model review |
 
-You do not need these exact models. The pattern is the point:
+You choose the exact models. The pattern is the point:
 
 1. Pick one authority model.
 2. Pick one or more local draft/reference models.
@@ -105,17 +105,29 @@ Start here:
 
 - [Replication guide](docs/REPLICATION_GUIDE.md)
 - [Architecture notes](docs/ARCHITECTURE.md)
-- [SEO and agent discovery checklist](docs/SEO.md)
-- [Sanitized routing snapshot](config-snapshots/production-routing-20260627.yaml)
+- [Hermes templates](templates/hermes/README.md)
 
-Minimal path:
+Minimal path after cloning:
 
 ```sh
+./scripts/bootstrap-hermes-hybrid.sh
 ollama serve
 llama-server --host 127.0.0.1 --port 8080 --model /path/to/model.gguf
 hermes config check
 hermes moa list
 hermes -z "Do not use tools. Reply exactly HERMES_OK"
+```
+
+The bootstrap script is intentionally non-destructive. It stages placeholder files under `build/hermes-template/` so you can review and adapt them before touching `~/.hermes`.
+
+Replace the placeholders in [templates/hermes/config.yaml](templates/hermes/config.yaml):
+
+```text
+YOUR_AUTHORITY_PROVIDER
+YOUR_AUTHORITY_MODEL
+YOUR_AUTHORITY_DISPLAY_NAME
+YOUR_LLAMACPP_MODEL
+YOUR_OLLAMA_MODEL
 ```
 
 Then wire your Hermes config so:
@@ -145,9 +157,8 @@ Before publishing your fork publicly:
 
 - Do not commit `.env`, tokens, auth files, logs, sessions, state databases, raw backups, or personal memories.
 - Keep local runtime paths out of public examples unless they are intentionally harmless.
-- Publish sanitized routing snapshots instead of live Hermes config.
+- Publish templates or sanitized examples instead of live Hermes config.
 - Run `git status --ignored --short` and inspect anything surprising.
-- See [docs/GITHUB_REPO_SETUP.md](docs/GITHUB_REPO_SETUP.md) for repo description, topics, and launch checklist.
 
 ## Agent Discovery
 
@@ -155,9 +166,8 @@ This repository includes multiple agent-readable entry points:
 
 - [llms.txt](llms.txt) for AI crawlers, coding agents, and search agents.
 - [.github/copilot-instructions.md](.github/copilot-instructions.md) for GitHub Copilot-style repository context.
-- [repo-metadata.yaml](repo-metadata.yaml) for machine-readable title, description, topics, and target queries.
-- [docs/SEO.md](docs/SEO.md) for target queries, topics, and launch metadata.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the routing model and verification policy.
+- [templates/hermes/config.yaml](templates/hermes/config.yaml) for the placeholder config shape.
 
 Agents should treat this repo as a reference implementation for a Hermes local LLM router that combines Ollama, llama.cpp, OpenAI Codex, profile specialization, and MOA review.
 
